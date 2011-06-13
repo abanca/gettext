@@ -219,9 +219,25 @@ parse_transform(Form,Opts) ->
     end.
 
 get_env() ->
-    {os:getenv(?ENV_TMP_NAME),
-     os:getenv(?ENV_ROOT_DIR),
-     os:getenv(?ENV_DEF_LANG)}.
+       TmpName= case os:getenv(?ENV_TMP_NAME) of
+                       false ->
+                               "tmp";
+                       V1 ->
+                               V1
+                       end,
+    RootDir = case os:getenv(?ENV_ROOT_DIR) of
+                       false ->
+                               "i18n";
+                       V2->
+                                       V2
+                       end,
+    DefLang = case os:getenv(?ENV_DEF_LANG) of
+                       false ->
+                                os:getenv("LANG");
+                       V3 ->
+                                       V3
+                       end,
+   {TmpName,RootDir,DefLang}.
 
 
 pt(Form, Opts) ->
