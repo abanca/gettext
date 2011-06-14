@@ -6,10 +6,10 @@
 %% distribute, sublicense, and/or sell copies of the Software, and to permit
 %% persons to whom the Software is furnished to do so, subject to the
 %% following conditions:
-%% 
+%%
 %% The above copyright notice and this permission notice shall be included
 %% in all copies or substantial portions of the Software.
-%% 
+%%
 %% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 %% OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 %% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
@@ -90,12 +90,12 @@ escape_chars(Str) ->
     F = fun($", Acc)  -> [$\\,$"|Acc];
            ($\\, Acc) -> [$\\,$\\|Acc];
            ($\n, Acc) -> [$\\,$n|Acc];
-	   (C, Acc)   -> [C|Acc] 
+	   (C, Acc)   -> [C|Acc]
 	end,
     lists:foldr(F, [], Str).
 
 
-%%% Split the string into substrings, 
+%%% Split the string into substrings,
 %%% aligned around a specific column.
 get_line(Str) ->
     get_line(Str, ?SEP, 1, ?ENDCOL, []).
@@ -136,7 +136,7 @@ find_end([H|T], Sep, N, Pivot, Acc) ->
     find_end(T, Sep, N+1, Pivot, [H|Acc]);
 find_end([], _Sep, _N, _Pivot, Acc) ->
     {true, Acc, []}.
-    
+
 reverse_tape(Acc, Str) ->
     reverse_tape(Acc, Str, ?SEP).
 
@@ -156,7 +156,7 @@ split_string([H|T], End, N, Acc) when N < End ->
     split_string(T, End, N+1, [H|Acc]);
 split_string([], _End, _N, Acc) ->
     {lists:reverse(Acc), []}.
-    
+
 %%%fmt_fileinfo(Finfo) ->
 %%%    F = fun({Fname,LineNo}, Acc) ->
 %%%		Fname ++ ":" ++ to_list(LineNo) ++ [$\s|Acc]
@@ -192,15 +192,15 @@ mk_header(true  = _UseOrigHeader, _LC) ->
         "\"Content-Type: text/plain; charset=iso-8859-1\\n\"\n"
         "\"Content-Transfer-Encoding: 8bit\\n\"\n".
 
- 
+
 %%% --------------------------------------------------------------------
 %%% NB: We assume that the surrounding code does some preparations:
 %%%
 %%%   1. Setup the environment variables: 'GETTEXT_DIR' and 'GETTEXT_TMP_NAME'
-%%%   
+%%%
 %%%   2. The compiler is called with the 'gettext' flag.
 %%%
-%%%   3. The file $(GETTEXT_DIR)/lang/$(GETTEXT_TMP_NAME)/epot.dets is 
+%%%   3. The file $(GETTEXT_DIR)/lang/$(GETTEXT_TMP_NAME)/epot.dets is
 %%%      removed before the first erlang/yaws file is processed.
 %%%      (entrys are appended to the file)
 %%% --------------------------------------------------------------------
@@ -210,7 +210,7 @@ parse_transform(Form,Opts) ->
 	    {Gettext_App_Name, GtxtDir, _} = get_env(),
 	    open_epot_file(Gettext_App_Name, GtxtDir),
 	    ?debug( "--- Opts --- ~p~n",[Opts]),
-	    ?debug("--- Env --- isd_type=~p , gettext_dir=~p~n", 
+	    ?debug("--- Env --- isd_type=~p , gettext_dir=~p~n",
 		   [Gettext_App_Name,GtxtDir]),
             try pt(Form, Opts) after close_epot_file() end,
 	    Form;
@@ -219,24 +219,24 @@ parse_transform(Form,Opts) ->
     end.
 
 get_env() ->
-       TmpName= case os:getenv(?ENV_TMP_NAME) of
-                       false ->
-                               "tmp";
-                       V1 ->
-                               V1
-                       end,
+    TmpName= case os:getenv(?ENV_TMP_NAME) of
+                    false ->
+                        "default";
+                    V1 ->
+                        V1
+                end,
     RootDir = case os:getenv(?ENV_ROOT_DIR) of
-                       false ->
-                               "i18n";
-                       V2->
-                                       V2
-                       end,
+                  false ->
+                      "i18n";
+                  V2->
+                      V2
+              end,
     DefLang = case os:getenv(?ENV_DEF_LANG) of
-                       false ->
-                                os:getenv("LANG");
-                       V3 ->
-                                       V3
-                       end,
+                  false ->
+                      os:getenv("LANG");
+                  V3 ->
+                      V3
+              end,
    {TmpName,RootDir,DefLang}.
 
 
@@ -306,7 +306,7 @@ while(0,T,_,_) ->
 
 
 dump("", _) -> ok;
-dump(Str,L) -> 
+dump(Str,L) ->
     Fname = get(fname),
     Finfo = get_file_info(Str),
     dets:insert(?EPOT_TABLE, {Str, [{Fname,L}|Finfo]}).
